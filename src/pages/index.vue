@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-const { vibrate } = useVibrate()
-vibrate(500)
+const { vibrate, isSupported } = useVibrate()
 
 const seconds = ref(10)
 const count = ref(0)
@@ -24,6 +23,7 @@ whenever(() => {
 }, () => {
   count.value++
   lastTick.value = timestamp.value
+  vibrate(500)
 })
 
 function pause() {
@@ -56,4 +56,8 @@ function reset() {
       n-button(v-if="!isActive" @click="resume") #[.i-mdi-play]
       n-button(v-if="!isActive" @click="reset") #[.i-mdi-refresh]
     .text-2xl.font-mono {{ timeElapsed }}
+
+.fixed.bottom-4.left-4.flex.items-center.gap-x-2.text-lg(v-if="isSupported" @click="vibrate(500)")
+  .i-mdi-vibrate
+  | supported
 </template>
