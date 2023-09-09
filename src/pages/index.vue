@@ -5,6 +5,8 @@ const seconds = ref(10)
 const count = ref(0)
 const lastTick = ref(Date.now())
 const { timestamp, isActive, resume: resumeTimestamp, pause: pauseTimestamp } = useTimestamp({ controls: true })
+const { request: requestWakeLock, isActive: isWakeLockActive, release: releaseWakeLock, isSupported: isWakeLockSupported } = useWakeLock()
+requestWakeLock('screen')
 
 function pad(num: number, size: number) {
   const s = `${num}`
@@ -60,4 +62,8 @@ function reset() {
 .fixed.bottom-4.left-4.flex.items-center.gap-x-2.text-lg(v-if="isSupported" @click="vibrate(500)")
   .i-mdi-vibrate
   | supported
+
+.fixed.bottom-4.right-4.flex.items-center.gap-x-2.text-lg(v-if="isWakeLockSupported")
+  .i-mdi-lock(v-if="isWakeLockActive" @click="releaseWakeLock()")
+  .i-mdi-lock-open-variant(v-if="!isWakeLockActive" @click="requestWakeLock('screen')")
 </template>
